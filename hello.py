@@ -64,5 +64,5 @@ def pageNotFount(error):
 #     print(url_for('index'))
 #     print(url_for('about'))
 
-if __name__ == "__main__":
-    app.run(debug=True)
+# if __name__ == "__main__":
+#     app.run(debug=True)
