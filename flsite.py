@@ -3,6 +3,7 @@ import os
 from flask import Flask, render_template, g, request, flash, abort, session, redirect, url_for
 from FDataBase import FDataBase
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import LoginManager
 
 # конфигурация
 DATABASE = '/tmp/flsite.db'
@@ -15,6 +16,8 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 
 app.config.update(dict(DATABASE=os.path.join(app.root_path, 'flsite.db')))
+
+login_manager = LoginManager(app)
 
 
 def connect_db():
@@ -52,7 +55,7 @@ def before_request():
 
 @app.teardown_appcontext
 def close_db(error):
-    '''Закрываем соединение с БД, если оно было установлено'''
+    """Закрываем соединение с БД, если оно было установлено"""
     if hasattr(g, 'link_db'):
         g.link_db.close()
 
@@ -95,8 +98,8 @@ def login():
 def register():
     if request.method == "POST":
         session.pop('_flashes', None)
-        if len(request.form['name']) > 4 and len(request.form['email']) > 4 \
-                and len(request.form['psw']) > 4 and request.form['psw'] == request.form['psw2']:
+        if len(request.form['name']) > 4 and len(request.form['email']) > 4 and len(request.form['psw']) > 4 and \
+                request.form['psw'] == request.form['psw2']:
             hash = generate_password_hash(request.form['psw'])
             res = dbase.addUser(request.form['name'], request.form['email'], hash)
             if res:
